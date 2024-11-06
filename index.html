@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        #data { margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1>Dashboard</h1>
+    <div>
+        <h2>Publish Data</h2>
+        <input type="text" id="publisherId" placeholder="Publisher ID" />
+        <input type="text" id="data" placeholder="Data" />
+        <button onclick="publish()">Publish</button>
+    </div>
+    <div>
+        <h2>Subscribe to Data</h2>
+        <input type="text" id="subscribeId" placeholder="Publisher ID" />
+        <button onclick="subscribe()">Subscribe</button>
+    </div>
+    <div id="dataDisplay"></div>
+
+
+    <script>
+        function publish() {
+            const publisherId = document.getElementById('publisherId').value;
+            const data = document.getElementById('data').value;
+
+
+            fetch('/publish', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ publisher_id: publisherId, data: data })
+            })
+            .then(response => response.json())
+            .then(data => alert('Data published successfully!'))
+            .catch(error => console.error('Error:', error));
+        }
+
+
+        function subscribe() {
+            const publisherId = document.getElementById('subscribeId').value;
+
+
+            fetch(`/subscribe/${publisherId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    document.getElementById('dataDisplay').innerText = data.error;
+                } else {
+                    document.getElementById('dataDisplay').innerText = `Data: ${data.data}`;
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>
