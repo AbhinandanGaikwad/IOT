@@ -1,0 +1,65 @@
+exp 3
+
+
+
+
+
+import RPi.GPIO as GPIO
+import time
+
+sensor = 16
+buzzer = 18
+
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(sensor,GPIO.IN)
+GPIO.setup(buzzer,GPIO.OUT)
+
+GPIO.output(buzzer,True)
+print "IR Sensor Ready....."
+print " "
+
+try: 
+   while True:
+      if GPIO.input(sensor):
+          GPIO.output(buzzer,False)
+          print "Object Detected"
+          while GPIO.input(sensor):
+              time.sleep(0.2)
+      else:
+          GPIO.output(buzzer,True)
+
+
+except KeyboardInterrupt:
+    GPIO.cleanup()
+
+
+exp 3 : Understanding and connectivity of Raspberry-Pi /Beagle board with camera. 
+Write an application to capture and store the image
+
+# Import the necessary modules
+import picamera
+from time import sleep
+
+# Create an object for the PiCamera class
+camera = picamera.PiCamera()
+
+# Set the camera resolution
+camera.resolution = (1024, 768)
+
+# Adjust the camera's brightness level
+camera.brightness = 60
+
+# Start the camera preview
+camera.start_preview()
+
+# Add an annotation (text) on the previewed image
+camera.annotate_text = 'Hi Pi User'
+
+# Keep the preview for 5 seconds before capturing the image
+sleep(5)
+
+# Capture the image and save it as 'image1.jpeg'
+camera.capture('image1.jpeg')
+
+# Stop the camera preview
+camera.stop_preview()
